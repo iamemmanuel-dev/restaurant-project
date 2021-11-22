@@ -1,0 +1,187 @@
+jQuery(document).ready(function(){
+	
+	"use strict";
+
+	// Alert before resetting a Purchase Key
+	jQuery('input[name="reset_key_submit"]').click(function(){
+		return confirm('You are about to reset a Purchase key and all its data. Proceed?');
+	});
+
+	jQuery(document).on('click', '.edit-domain', function(event){
+		event.stopPropagation();
+		var prevDomain = jQuery(this).prev('.current-domain').html();
+		jQuery(this).prev('.current-domain').html('<input type="text" class="new-domain-input" value="'+prevDomain+'">').find('.new-domain-input').focus();
+		jQuery(this).html('Save new domain').addClass('save-new-domain').removeClass('edit-domain');
+	});
+
+	jQuery(document).on('click', '.save-new-domain', function(){
+		
+		// set cursor to waiting
+		jQuery('html,body,.save-new-domain').css('cursor', 'wait');
+		// jQuery('html,body').css('cursor', 'wait');
+
+		var currentDomain = jQuery(this).prev('.current-domain'),
+			thisHandler = jQuery(this);
+		
+		// Initialise the request
+		jQuery.post(ajaxurl, {
+			
+			action: 'at_edit_license_domain',
+			license_id: jQuery(this).data('license'),
+			new_domain: jQuery('.new-domain-input').val()
+		
+		}, function (response) {
+			
+			currentDomain.html(jQuery('.new-domain-input').val());
+			thisHandler.html('Edit').removeClass('save-new-domain').addClass('edit-domain');
+			// set cursor back to normal
+			jQuery('html,body,.save-new-domain,.edit-domain').css('cursor', 'default');
+			currentDomain.animate({ backgroundColor: "#f3f37e" }, {
+				duration: 500, 
+				complete: function() {
+					// reset
+					currentDomain.delay(250).animate({ backgroundColor: "#ffffff" }, {
+						duration: 500,
+					});
+				}
+			});
+		
+		});
+	
+	});
+
+
+	/**
+	 * Handle Domains Management for PRO Membership User Page
+	 */
+	
+	// add new pro domain
+	jQuery('#add-pro-domain').click(function(){
+		event.preventDefault();
+		// remove no domains msg if present
+		if ( jQuery('.no-domains-msg').length ) {
+			jQuery('.no-domains-msg').fadeOut('fast', function(){
+				// add input field
+				jQuery('ul.pro-domain-list').append('<li><input type="text" class="pro-domain-input"><span class="save-pro-domain">Save Domain</span></li>').find('.pro-domain-input').focus();
+			});
+		} else {
+			// add input field
+			jQuery('ul.pro-domain-list').append('<li><input type="text" class="pro-domain-input"><span class="save-pro-domain">Save Domain</span></li>').find('.pro-domain-input').focus();
+		}
+	});
+
+	// edit old pro domain
+	jQuery(document).on('click', '.edit-pro-domain', function(){
+		var prevDomain = jQuery(this).prev('span').html();
+		jQuery(this).parent('li').html('<input type="text" class="pro-domain-input"><span class="save-pro-domain">Save Domain</span>').find('.pro-domain-input').focus();
+		jQuery('.pro-domain-input').val(prevDomain);
+		jQuery('.pro-domain-input').before('<input type="hidden" class="edit-domain-input" value="'+prevDomain+'">');
+	});
+
+	// save new (or edited) pro domain
+	jQuery(document).on('click', '.save-pro-domain', function(){
+		
+		// set cursor to waiting
+		jQuery('html,body,.save-pro-domain').css('cursor', 'wait');
+		// jQuery('html,body').css('cursor', 'wait');
+
+		var	thisHandler 	= jQuery(this),
+			currentDomain 	= thisHandler.prev('.pro-domain-input'),
+			newDomain		= jQuery('.pro-domain-input').val();
+		
+		// initialise the request
+		jQuery.post(ajaxurl, {
+			
+			action: 'at_save_pro_domain',
+			license_id: jQuery('#pro-license-id').val(),
+			edit_domain: jQuery('.edit-domain-input').val(),
+			new_domain: newDomain,
+		
+		}, function (response) {
+
+			if ( response != 'error' ) {
+				
+				currentDomain.remove();
+				jQuery('.edit-domain-input').remove();
+				
+				thisHandler.before('<span class="pro-domain-el">' + response + '</span>').after('<span class="remove-pro-domain pro-domain-action"><i class="fa fa-icon_close"></i> Remove</span>');
+				var addedDomain = thisHandler.prev('span');
+				thisHandler.html('<i class="fa fa-pencil"></i> Edit').removeClass('save-pro-domain').addClass('edit-pro-domain pro-domain-action');
+
+				// set cursor back to normal
+				jQuery('html,body,.save-pro-domain,.edit-pro-domain').css('cursor', 'default');
+				addedDomain.animate({ backgroundColor: "#f3f37e" }, {
+					duration: 500, 
+					complete: function() {
+						// reset
+						addedDomain.delay(250).animate({ backgroundColor: "#f0f0f0" }, {
+							duration: 500,
+						});
+					}
+				});
+
+			} else {
+				alert('Sorry! You don\'t have enough permissions to do that.');
+			}
+		
+		});
+	
+	});
+
+	// remove pro domain
+	jQuery(document).on('click', '.remove-pro-domain', function(){
+
+		jQuery('html,body,.remove-pro-domain').css('cursor', 'wait');
+		var thisHandler = jQuery(this);
+
+		// initialise the request
+		jQuery.post(ajaxurl, {
+			
+			action: 'at_remove_pro_domain',
+			license_id: jQuery('#pro-license-id').val(),
+			remove_domain: jQuery(this).siblings('.pro-domain-el').html()
+		
+		}, function (response) {
+				
+			// set cursor back to normal
+			jQuery('html,body,.remove-pro-domain').css('cursor', 'default');
+			
+			// remove element from visible DOM
+			thisHandler.parent('li').fadeOut();
+
+		});
+		
+	});
+
+
+	/**
+	 * Check for support term and license status
+	 * (for Themeforest licenses)
+	 */
+	jQuery(document).on('click', '#at_clear_license', function(){
+
+		var thisLicense = jQuery(this);
+
+		jQuery.post(ajaxurl, {
+			action: 'at_check_tf_license_term',
+			license: thisLicense.parents('.at-license-group').find('.at-license-clear-lic span').html(),
+			user: thisLicense.parents('.at-license-group').find('.at-license-clear-user span').html(),
+		}, function (response) {
+			if ( response != 0 ) {
+				thisLicense.parent().after('<li>' + response + '</li>');
+			} 
+		});
+
+		return false;
+
+	});
+
+
+	/**
+	 * Alert before cancelling a license on user's dashboard
+	 */
+	jQuery('.cancel-renew-link').click(function(){
+		return confirm('You\'re about to cancel renewals for this license. Are you sure?');
+	})
+
+});
