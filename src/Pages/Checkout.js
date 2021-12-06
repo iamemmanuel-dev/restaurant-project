@@ -146,7 +146,7 @@ const Checkout = {
                   <label class='transac__label'>
                     <div class='credit__card-container'>
                       <h4>
-                        This section of the site forward isn't functional, as i am at this point, only a front-end developer. Cheers!
+                        This section of the site forward isn't functional, as it is only a fun project. Cheers!
                       </h4>
                       <div class='transac__center'>
                         <div>

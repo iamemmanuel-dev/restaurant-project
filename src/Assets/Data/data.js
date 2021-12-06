@@ -2,7 +2,7 @@ const data = [
   {
     id: 3,
     img: './src/Assets/images/9ja3.jpg',
-    title: '',
+    title: 'tenetur ratione cumqu',
     price: 45,
     category: 'nigerian',
     desc: 'voluptatibus totam fugiat quas aperiam cupiditate repellendus',
@@ -58,7 +58,7 @@ const data = [
   {
     id: 19,
     img: './src/Assets/images/EngFood5.jpg',
-    title: '',
+    title: 'facilis nemo',
     price: 55,
     category: 'english',
     desc: 'Quidem sapiente quis dignissimos magnam',
@@ -96,7 +96,7 @@ const data = [
   {
     id: 18,
     img: './src/Assets/images/EngFood4.jpg',
-    title: '',
+    title: 'rem ullam',
     price: 60,
     category: 'english',
     desc: 'dolores ab beatae consequuntur natus',
@@ -134,7 +134,7 @@ const data = [
   {
     id: 8,
     img: './src/Assets/images/burger3.webp',
-    title: '',
+    title: 'ratione cumque',
     price: 30,
     category: 'burger',
     desc: 'Molestias consequuntur eos iste optio quod cum',
@@ -172,7 +172,7 @@ const data = [
   {
     id: 2,
     img: './src/Assets/images/9ja2.png',
-    title: '',
+    title: 'dolor sit amet',
     price: 50,
     category: 'nigerian',
     desc: 'Ad magni unde suscipit ipsum omnis ducimus, magnam natus',
@@ -267,7 +267,7 @@ const data = [
   {
     id: 16,
     img: './src/Assets/images/EngFood2.jpg',
-    title: '',
+    title: 'natus excepturi',
     price: 50,
     category: 'english',
     desc: ' Nam aspernatur natus excepturi voluptatibus',
@@ -286,7 +286,7 @@ const data = [
   {
     id: 13,
     img: './src/Assets/images/chineseFood4.jpg',
-    title: '',
+    title: 'dolorum quidem',
     price: 50,
     category: 'chinese',
     desc: 'dolore quo dolorum quidem eum quasi',
@@ -362,7 +362,7 @@ const data = [
   {
     id: 14,
     img: './src/Assets/images/chineseFood5.jpg',
-    title: '',
+    title: 'udantium pariatur',
     price: 40,
     category: 'chinese',
     desc: 'laudantium pariatur repudiandae inventore',
